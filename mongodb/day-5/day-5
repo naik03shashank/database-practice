@@ -1,0 +1,417 @@
+# Advanced MongoDB Query Operators & Aggregation
+
+## 1. `$expr`
+
+The `$expr` operator allows aggregation expressions to be used inside query filters.
+
+### Purpose
+
+Used when comparing:
+
+* Field vs Field
+* Field vs Calculation
+
+### Example
+
+```javascript
+db.students.find({
+   $expr:{
+      $gt:["$marks","$passingMarks"]
+   }
+})
+```
+
+### Output
+
+Returns students whose marks are greater than their passing marks.
+
+### Another Example
+
+```javascript
+db.monthlyBudget.find({
+   $expr:{
+      $gt:[
+         "$spent",
+         {
+            $divide:["$budget",2]
+         }
+      ]
+   }
+})
+```
+
+### Explanation
+
+Finds all documents where:
+
+```text
+spent > budget / 2
+```
+
+### Common Operators Used with `$expr`
+
+```javascript
+$gt
+$lt
+$gte
+$lte
+$eq
+$ne
+```
+
+### Interview Definition
+
+`$expr` allows MongoDB queries to use aggregation expressions and compare fields within the same document.
+
+---
+
+# 2. Aggregation Framework
+
+Aggregation processes documents through multiple stages and returns computed results.
+
+```text
+Documents
+   ↓
+Stage 1
+   ↓
+Stage 2
+   ↓
+Result
+```
+
+---
+
+## `$match`
+
+Filters documents.
+
+### Example
+
+```javascript
+db.students.aggregate([
+{
+   $match:{
+      age:{ $gt:20 }
+   }
+}
+])
+```
+
+### Purpose
+
+Works similarly to `find()`.
+
+---
+
+## `$group`
+
+Groups documents based on a field.
+
+### Example
+
+```javascript
+db.sales.aggregate([
+{
+   $group:{
+      _id:"$product"
+   }
+}
+])
+```
+
+### Purpose
+
+Groups all documents having the same product together.
+
+---
+
+## `$sum`
+
+Calculates total values.
+
+### Example
+
+```javascript
+db.sales.aggregate([
+{
+   $group:{
+      _id:"$product",
+      totalSales:{
+         $sum:"$amount"
+      }
+   }
+}
+])
+```
+
+### Purpose
+
+Calculates total sales per product.
+
+---
+
+## `$avg`
+
+Calculates average values.
+
+### Example
+
+```javascript
+db.students.aggregate([
+{
+   $group:{
+      _id:null,
+      averageMarks:{
+         $avg:"$marks"
+      }
+   }
+}
+])
+```
+
+### Purpose
+
+Returns average marks of all students.
+
+---
+
+## `$count`
+
+Counts documents.
+
+### Example
+
+```javascript
+db.students.aggregate([
+{
+   $count:"totalStudents"
+}
+])
+```
+
+### Output
+
+```javascript
+[
+   {
+      totalStudents:50
+   }
+]
+```
+
+---
+
+## `$project`
+
+Used to select, remove, rename, or create fields.
+
+### Example
+
+```javascript
+db.students.aggregate([
+{
+   $project:{
+      _id:0,
+      name:1,
+      marks:1
+   }
+}
+])
+```
+
+### Purpose
+
+Returns only selected fields.
+
+---
+
+## `$sort`
+
+Sorts documents.
+
+### Ascending Order
+
+```javascript
+db.students.aggregate([
+{
+   $sort:{
+      marks:1
+   }
+}
+])
+```
+
+### Descending Order
+
+```javascript
+db.students.aggregate([
+{
+   $sort:{
+      marks:-1
+   }
+}
+])
+```
+
+### Purpose
+
+Orders documents by a field.
+
+---
+
+# 3. Embedded Documents
+
+Embedded documents are documents stored inside another document.
+
+### Example
+
+```javascript
+{
+   name:"Shashank",
+   address:{
+      city:"Bangalore",
+      state:"Karnataka"
+   }
+}
+```
+
+### Insert
+
+```javascript
+db.students.insertOne({
+   name:"Shashank",
+   address:{
+      city:"Bangalore",
+      state:"Karnataka"
+   }
+})
+```
+
+### Query
+
+```javascript
+db.students.find({
+   "address.city":"Bangalore"
+})
+```
+
+Uses dot notation.
+
+### Update
+
+```javascript
+db.students.updateOne(
+   { name:"Shashank" },
+   {
+      $set:{
+         "address.city":"Mumbai"
+      }
+   }
+)
+```
+
+### Advantages
+
+* Faster reads
+* Related data stored together
+* Simpler document structure
+
+---
+
+# 4. Projection
+
+Projection controls which fields are returned in query results.
+
+### Include Fields
+
+```javascript
+db.students.find(
+   {},
+   {
+      name:1,
+      age:1
+   }
+)
+```
+
+### Exclude Fields
+
+```javascript
+db.students.find(
+   {},
+   {
+      email:0
+   }
+)
+```
+
+### Hide `_id`
+
+```javascript
+db.students.find(
+   {},
+   {
+      _id:0,
+      name:1,
+      age:1
+   }
+)
+```
+
+### Rules
+
+Valid:
+
+```javascript
+{
+   name:1,
+   age:1
+}
+```
+
+Valid:
+
+```javascript
+{
+   email:0
+}
+```
+
+Invalid:
+
+```javascript
+{
+   name:1,
+   email:0
+}
+```
+
+Exception:
+
+```javascript
+{
+   _id:0,
+   name:1
+}
+```
+
+### Purpose
+
+Projection reduces unnecessary data transfer by returning only required fields.
+
+---
+
+# Quick Revision
+
+| Operator           | Purpose                                           |
+| ------------------ | ------------------------------------------------- |
+| `$expr`            | Compare fields or perform calculations in queries |
+| `$match`           | Filter documents                                  |
+| `$group`           | Group documents                                   |
+| `$sum`             | Calculate total                                   |
+| `$avg`             | Calculate average                                 |
+| `$count`           | Count documents                                   |
+| `$project`         | Select or modify fields                           |
+| `$sort`            | Sort documents                                    |
+| Embedded Documents | Store documents inside documents                  |
+| Projection         | Control returned fields                           |

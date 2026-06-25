@@ -1,0 +1,86 @@
+[
+  {
+    "_id": 1,
+    "title": "MongoDB Basics",
+    "genre": "Technology",
+    "durationMinutes": 25,
+    "releaseYear": 2024,
+    "author": {
+      "name": "Aman Sharma",
+      "country": "India"
+    },
+    "tags": ["mongodb", "nosql", "database"],
+    "ratings": {
+      "average": 4.8,
+      "count": 120
+    },
+    "episodes": [
+      {
+        "episodeNo": 1,
+        "title": "What is MongoDB",
+        "duration": 5,
+        "views": 12000
+      },
+      {
+        "episodeNo": 2,
+        "title": "CRUD Operations",
+        "duration": 8,
+        "views": 18000
+      }
+    ],
+    "comments": [
+      {
+        "user": "Raj",
+        "message": "Great tutorial",
+        "likes": 10
+      },
+      {
+        "user": "Mia",
+        "message": "Very clear explanation",
+        "likes": 15
+      }
+    ]
+  },
+  {
+    "_id": 2,
+    "title": "Advanced Querying",
+    "genre": "Technology",
+    "durationMinutes": 35,
+    "releaseYear": 2025,
+    "author": {
+      "name": "Neha Patel",
+      "country": "USA"
+    },
+    "tags": ["mongodb", "query", "aggregation"],
+    "ratings": {
+      "average": 4.6,
+      "count": 95
+    },
+    "episodes": [
+      {
+        "episodeNo": 1,
+        "title": "$match and $group",
+        "duration": 6,
+        "views": 15000
+      },
+      {
+        "episodeNo": 2,
+        "title": "Nested Filters",
+        "duration": 9,
+        "views": 21000
+      }
+    ],
+    "comments": [
+      {
+        "user": "Aarav",
+        "message": "Helpful examples",
+        "likes": 20
+      },
+      {
+        "user": "Sara",
+        "message": "Loved the nested query part",
+        "likes": 18
+      }
+    ]
+  }
+]
